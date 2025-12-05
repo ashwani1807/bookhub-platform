@@ -34,7 +34,7 @@ const Index = () => {
               </div>
               <h3 className="text-2xl font-semibold mb-2">Hotels</h3>
               <p className="text-muted-foreground mb-4">5000+ Hotels Worldwide</p>
-              <Button className="w-full" onClick={() => navigate("/hotels")}>Browse Hotels</Button>
+              <Button className="w-full" onClick={() => navigate("/hotels/search")}>Browse Hotels</Button>
             </CardContent>
           </Card>
 

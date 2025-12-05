@@ -301,6 +301,22 @@ const mockHotelsData: Record<string, Hotel[]> = {
   ],
 };
 
+export interface RoomType {
+  type: string;
+  capacity: number;
+  price: number;
+  available: number;
+}
+
+export interface Review {
+  id: string;
+  userName: string;
+  rating: number;
+  date: string;
+  comment: string;
+  avatar?: string;
+}
+
 export interface Hotel {
   id: string;
   name: string;
@@ -315,6 +331,17 @@ export interface Hotel {
   amenities: string[];
   availableRooms: number;
   totalRooms: number;
+}
+
+export interface HotelDetails extends Hotel {
+  fullDescription: string;
+  images: string[];
+  roomTypes: RoomType[];
+  reviews: Review[];
+  coordinates: { lat: number; lng: number };
+  policies: string[];
+  contactEmail: string;
+  contactPhone: string;
 }
 
 export interface HotelSearchParams {
@@ -446,4 +473,152 @@ export async function searchHotels(params: Partial<HotelSearchParams>): Promise<
       hotels: paginatedHotels,
     },
   };
+}
+
+// Detailed hotel data for the details page
+const hotelDetailsData: Record<string, HotelDetails> = {
+  "hotel-001": {
+    id: "hotel-001",
+    name: "Luxury Grand Hotel",
+    city: "New York",
+    country: "USA",
+    location: "Manhattan",
+    image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800",
+    description: "5-star luxury hotel in the heart of Manhattan",
+    fullDescription: `Welcome to the Luxury Grand Hotel, a magnificent 5-star establishment nestled in the vibrant heart of Manhattan. Our hotel offers an unparalleled blend of classic elegance and modern sophistication, providing guests with an unforgettable New York experience.
+
+From the moment you step into our grand marble lobby, you'll be enveloped in an atmosphere of refined luxury. Our 50 exquisitely appointed rooms and suites feature floor-to-ceiling windows with breathtaking views of the Manhattan skyline, premium bedding with Egyptian cotton linens, and state-of-the-art amenities.
+
+Indulge in world-class dining at our award-winning restaurant, unwind at our rooftop bar with panoramic city views, or rejuvenate at our full-service spa. Our dedicated concierge team is available 24/7 to ensure your every need is met with the utmost attention to detail.
+
+Located just steps from Central Park, Fifth Avenue shopping, and Broadway theaters, the Luxury Grand Hotel is your perfect base for exploring the best of New York City.`,
+    pricePerNight: 250,
+    rating: 4.8,
+    reviewCount: 450,
+    amenities: ["WiFi", "Swimming Pool", "Gym", "Restaurant", "Spa", "Room Service", "Bar", "Concierge", "Valet Parking", "Business Center"],
+    availableRooms: 5,
+    totalRooms: 50,
+    images: [
+      "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800",
+      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800",
+      "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800",
+      "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800",
+      "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800",
+      "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800",
+    ],
+    roomTypes: [
+      { type: "Standard Room", capacity: 2, price: 250, available: 2 },
+      { type: "Deluxe Room", capacity: 2, price: 350, available: 1 },
+      { type: "Executive Suite", capacity: 3, price: 500, available: 1 },
+      { type: "Presidential Suite", capacity: 4, price: 800, available: 1 },
+    ],
+    reviews: [
+      {
+        id: "rev-001",
+        userName: "Sarah M.",
+        rating: 5,
+        date: "2024-11-15",
+        comment: "Absolutely stunning hotel! The views from our room were incredible, and the staff went above and beyond to make our anniversary special. The spa was heavenly!",
+        avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100",
+      },
+      {
+        id: "rev-002",
+        userName: "James R.",
+        rating: 5,
+        date: "2024-11-10",
+        comment: "Best hotel experience in New York. The location is perfect, rooms are immaculate, and the restaurant serves amazing food. Will definitely return!",
+        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100",
+      },
+      {
+        id: "rev-003",
+        userName: "Emily T.",
+        rating: 4,
+        date: "2024-10-28",
+        comment: "Beautiful hotel with excellent amenities. Only minor issue was the wait time for room service during peak hours. Otherwise perfect!",
+        avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100",
+      },
+      {
+        id: "rev-004",
+        userName: "Michael D.",
+        rating: 5,
+        date: "2024-10-20",
+        comment: "The Presidential Suite exceeded all expectations. Stunning Manhattan views, impeccable service, and the most comfortable bed I've ever slept in.",
+        avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100",
+      },
+      {
+        id: "rev-005",
+        userName: "Lisa W.",
+        rating: 5,
+        date: "2024-10-15",
+        comment: "We celebrated our wedding anniversary here and it was magical. The concierge arranged a surprise champagne and roses in our room. Truly exceptional!",
+      },
+    ],
+    coordinates: { lat: 40.7580, lng: -73.9855 },
+    policies: [
+      "Check-in: 3:00 PM | Check-out: 11:00 AM",
+      "Free cancellation up to 48 hours before check-in",
+      "Children of all ages welcome",
+      "Pets allowed (additional fee applies)",
+      "Non-smoking rooms available",
+    ],
+    contactEmail: "reservations@luxurygrand.com",
+    contactPhone: "+1 (212) 555-0100",
+  },
+};
+
+// Function to get all hotels as a flat array for lookup
+function getAllHotels(): Hotel[] {
+  return Object.values(mockHotelsData).flat();
+}
+
+export async function getHotelById(hotelId: string): Promise<{ success: boolean; data?: HotelDetails; message?: string }> {
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  // Check if we have detailed data
+  if (hotelDetailsData[hotelId]) {
+    return { success: true, data: hotelDetailsData[hotelId] };
+  }
+
+  // Fallback: find in mock data and generate details
+  const allHotels = getAllHotels();
+  const hotel = allHotels.find((h) => h.id === hotelId);
+
+  if (!hotel) {
+    return { success: false, message: "Hotel not found" };
+  }
+
+  // Generate mock details for hotels without detailed data
+  const generatedDetails: HotelDetails = {
+    ...hotel,
+    fullDescription: `${hotel.description}\n\nExperience exceptional hospitality at ${hotel.name}, located in the beautiful ${hotel.location} area of ${hotel.city}. Our hotel offers a perfect blend of comfort and convenience, making it an ideal choice for both business and leisure travelers.\n\nEach of our ${hotel.totalRooms} rooms is thoughtfully designed to provide maximum comfort, featuring modern amenities and elegant décor. Our dedicated staff is committed to ensuring your stay is memorable and enjoyable.`,
+    images: [
+      hotel.image,
+      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800",
+      "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800",
+      "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800",
+    ],
+    roomTypes: [
+      { type: "Standard Room", capacity: 2, price: hotel.pricePerNight, available: Math.floor(hotel.availableRooms / 2) || 1 },
+      { type: "Deluxe Room", capacity: 2, price: Math.round(hotel.pricePerNight * 1.4), available: Math.ceil(hotel.availableRooms / 2) },
+    ],
+    reviews: [
+      {
+        id: `${hotelId}-rev-1`,
+        userName: "Guest User",
+        rating: hotel.rating,
+        date: "2024-11-01",
+        comment: `Great stay at ${hotel.name}. The location in ${hotel.location} was perfect and the amenities were excellent.`,
+      },
+    ],
+    coordinates: { lat: 40.7128 + Math.random() * 0.1, lng: -74.006 + Math.random() * 0.1 },
+    policies: [
+      "Check-in: 3:00 PM | Check-out: 11:00 AM",
+      "Free cancellation up to 24 hours before check-in",
+      "Children welcome",
+    ],
+    contactEmail: `info@${hotel.name.toLowerCase().replace(/\s+/g, "")}.com`,
+    contactPhone: "+1 (555) 000-0000",
+  };
+
+  return { success: true, data: generatedDetails };
 }

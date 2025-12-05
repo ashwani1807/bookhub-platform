@@ -53,7 +53,7 @@ export function HotelCard({ hotel, checkInDate, checkOutDate, rooms }: HotelCard
   };
 
   const handleViewDetails = () => {
-    navigate(`/hotels/${hotel.id}`);
+    navigate(`/hotels/${hotel.id}/details`);
   };
 
   const handleBookNow = () => {
